@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 using Windows.ApplicationModel;
+using Windows.Foundation.Metadata;
 using Windows.Storage;
 using Windows.System;
 using Windows.UI.Popups;
@@ -46,104 +47,92 @@ namespace Windows.UI.Xaml
         public Appirater(AppiraterSettings settings)
         {
             this.settings = settings;
-            //NSNotificationCenter.DefaultCenter.AddObserver(UIApplication.WillResignActiveNotification, OnAppWillResignActive);
         }
 
         public MessageDialog RatingAlert { get { return ratingAlert; } }
 
-        /*
-             * Returns current app version
-             */
-        public string CurrentVersion
-        {
-            get
-            {
-                return Package.Current.Id.Version.ToString();
-            }
-        }
-
-        /*
-             DEPRECATED: While still functional, it's better to use
-             appLaunched:(BOOL)canPromptForRating instead.
-
-             Calls [Appirater appLaunched:YES]. See appLaunched: for details of functionality.
-             */
+        /// <summary>
+        /// Calls [Appirater appLaunched:YES]. See appLaunched: for details of functionality.
+        /// </summary>
+        [Deprecated("While still functional, it's better to use appLaunched:(BOOL)canPromptForRating instead.", DeprecationType.Deprecate, 1)]
         public void AppLaunched()
         {
             AppLaunched(true);
         }
 
-        /*
-             Tells Appirater that the app has launched, and on devices that do NOT
-             support multitasking, the 'uses' count will be incremented. You should
-             call this method at the end of your application delegate's
-             application:didFinishLaunchingWithOptions: method.
-		 
-             If the app has been used enough to be rated (and enough significant events),
-             you can suppress the rating alert
-             by passing NO for canPromptForRating. The rating alert will simply be postponed
-             until it is called again with YES for canPromptForRating. The rating alert
-             can also be triggered by appEnteredForeground: and userDidSignificantEvent:
-             (as long as you pass YES for canPromptForRating in those methods).
-             */
+        /// <summary>
+        /// Tells Appirater that the app has launched, and on devices that do NOT
+        /// support multitasking, the 'uses' count will be incremented. You should
+        /// call this method at the end of your application delegate's
+        /// application:didFinishLaunchingWithOptions: method.
+		/// 
+        /// If the app has been used enough to be rated (and enough significant events),
+        /// you can suppress the rating alert
+        /// by passing NO for canPromptForRating. The rating alert will simply be postponed
+        /// until it is called again with YES for canPromptForRating. The rating alert
+        /// can also be triggered by appEnteredForeground: and userDidSignificantEvent:
+        /// (as long as you pass YES for canPromptForRating in those methods).
+        /// </summary>
+        /// <param name="canPromptForRating"></param>
         public void AppLaunched(bool canPromptForRating)
         {
             IncrementUseCount();
-            if (canPromptForRating && RatingConditionsHaveBeenMet() && ConnectedToNetwork())
+            if (canPromptForRating && RatingConditionsHaveBeenMet())
                 ShowRatingAlert();
         }
 
-        /*
-             Tells Appirater that the app was brought to the foreground on multitasking
-             devices. You should call this method from the application delegate's
-             applicationWillEnterForeground: method.
-		 
-             If the app has been used enough to be rated (and enough significant events),
-             you can suppress the rating alert
-             by passing NO for canPromptForRating. The rating alert will simply be postponed
-             until it is called again with YES for canPromptForRating. The rating alert
-             can also be triggered by appLaunched: and userDidSignificantEvent:
-             (as long as you pass YES for canPromptForRating in those methods).
-             */
+        /// <summary>
+        /// Tells Appirater that the app was brought to the foreground on multitasking
+        /// devices. You should call this method from the application delegate's
+        /// applicationWillEnterForeground: method.
+        /// 
+        /// If the app has been used enough to be rated (and enough significant events),
+        /// you can suppress the rating alert
+        /// by passing NO for canPromptForRating. The rating alert will simply be postponed
+        /// until it is called again with YES for canPromptForRating. The rating alert
+        /// can also be triggered by appLaunched: and userDidSignificantEvent:
+        /// (as long as you pass YES for canPromptForRating in those methods).
+        /// </summary>
         public void AppEnteredForeground(bool canPromptForRating)
         {
             IncrementUseCount();
-            if (canPromptForRating && RatingConditionsHaveBeenMet() && ConnectedToNetwork())
+            if (canPromptForRating && RatingConditionsHaveBeenMet())
                 ShowRatingAlert();
         }
 
-        /*
-             Tells Appirater that the user performed a significant event. A significant
-             event is whatever you want it to be. If you're app is used to make VoIP
-             calls, then you might want to call this method whenever the user places
-             a call. If it's a game, you might want to call this whenever the user
-             beats a level boss.
-		 
-             If the user has performed enough significant events and used the app enough,
-             you can suppress the rating alert by passing NO for canPromptForRating. The
-             rating alert will simply be postponed until it is called again with YES for
-             canPromptForRating. The rating alert can also be triggered by appLaunched:
-             and appEnteredForeground: (as long as you pass YES for canPromptForRating
-             in those methods).
-             */
+        /// <summary>
+        /// Tells Appirater that the user performed a significant event. A significant
+        /// event is whatever you want it to be. If you're app is used to make VoIP
+        /// calls, then you might want to call this method whenever the user places
+        /// a call. If it's a game, you might want to call this whenever the user
+        /// beats a level boss.
+        /// 
+        /// If the user has performed enough significant events and used the app enough,
+        /// you can suppress the rating alert by passing NO for canPromptForRating. The
+        /// rating alert will simply be postponed until it is called again with YES for
+        /// canPromptForRating. The rating alert can also be triggered by appLaunched:
+        /// and appEnteredForeground: (as long as you pass YES for canPromptForRating
+        /// in those methods).
+        /// </summary>
+        /// <param name="canPromptForRating"></param>
         public void UserDidSignificantEvent(bool canPromptForRating)
         {
             IncrementSignificantEventCount();
-            if (canPromptForRating && RatingConditionsHaveBeenMet() && ConnectedToNetwork())
+            if (canPromptForRating && RatingConditionsHaveBeenMet())
                 ShowRatingAlert();
         }
 
-        /*
-             Tells Appirater to open the App Store page where the user can specify a
-             rating for the app. Also records the fact that this has happened, so the
-             user won't be prompted again to rate the app.
-
-             The only case where you should call this directly is if your app has an
-             explicit "Rate this app" command somewhere.  In all other cases, don't worry
-             about calling this -- instead, just call the other functions listed above,
-             and let Appirater handle the bookkeeping of deciding when to ask the user
-             whether to rate the app.
-             */
+        /// <summary>
+        /// Tells Appirater to open the App Store page where the user can specify a
+        /// rating for the app. Also records the fact that this has happened, so the
+        /// user won't be prompted again to rate the app.
+        /// 
+        /// The only case where you should call this directly is if your app has an
+        /// explicit "Rate this app" command somewhere.  In all other cases, don't worry
+        /// about calling this -- instead, just call the other functions listed above,
+        /// and let Appirater handle the bookkeeping of deciding when to ask the user
+        /// whether to rate the app.
+        /// </summary>
         public void RateApp()
         {
 #if WINDOWS_APP
@@ -158,9 +147,9 @@ namespace Windows.UI.Xaml
             Launcher.LaunchUriAsync(new Uri(reviewURL));
         }
 
-        /*
-             * Restarts tracking
-             */
+        /// <summary>
+        /// Restarts tracking
+        /// </summary>
         public void Restart()
         {
             AddOrUpdateValue(CURRENT_VERSION, Package.Current.Id.Version.ToString());
@@ -170,11 +159,6 @@ namespace Windows.UI.Xaml
             AddOrUpdateValue(RATED_CURRENT_VERSION, false);
             AddOrUpdateValue(DECLINED_TO_RATE, false);
             AddOrUpdateValue(REMINDER_REQUEST_DATE, DateTime.MinValue);
-        }
-
-        bool ConnectedToNetwork()
-        {
-            return true;
         }
 
         async void ShowRatingAlert()
@@ -252,76 +236,36 @@ namespace Windows.UI.Xaml
 
         void IncrementUseCount()
         {
-            // get the app's version
-            string version = CurrentVersion;
-
-            // get the version number that we've been tracking
             var userDefaults = ApplicationData.Current.LocalSettings;
-            var trackingVersion = (string)userDefaults.Values[CURRENT_VERSION];
-            if (string.IsNullOrEmpty(trackingVersion))
+            if (!userDefaults.Values.ContainsKey(FIRST_USE_DATE))
             {
-                trackingVersion = version;
-                AddOrUpdateValue(CURRENT_VERSION, version);
+                AddOrUpdateValue(FIRST_USE_DATE, DateTime.Now.ToString());
             }
+
+            // increment the use count
+            var useCount = GetValueOrDefault<int>(USE_COUNT, 0);
+            useCount++;
+            AddOrUpdateValue(USE_COUNT, useCount++);
 
             if (settings.Debug)
-                Debug.WriteLine("APPIRATER Tracking version: {0}", trackingVersion);
-
-            if (trackingVersion == version)
-            {
-                // check if the first use date has been set. if not, set it.
-                if (!userDefaults.Values.ContainsKey(FIRST_USE_DATE))
-                {
-                    AddOrUpdateValue(FIRST_USE_DATE, DateTime.Now.ToString());
-                }
-
-                // increment the use count
-                var useCount = GetValueOrDefault<int>(USE_COUNT, 0);
-                useCount++;
-                AddOrUpdateValue(USE_COUNT, useCount++);
-
-                if (settings.Debug)
-                    Debug.WriteLine("APPIRATER Use count: {0}", useCount);
-            }
-            else
-                Restart();
+                Debug.WriteLine("APPIRATER Use count: {0}", useCount);
         }
 
         void IncrementSignificantEventCount()
         {
-            // get the app's version
-            var version = CurrentVersion;
-
-            // get the version number that we've been tracking
             var userDefaults = ApplicationData.Current.LocalSettings;
-            var trackingVersion = (string)userDefaults.Values[CURRENT_VERSION];
-            if (string.IsNullOrEmpty(trackingVersion))
+            if (!userDefaults.Values.ContainsKey(FIRST_USE_DATE))
             {
-                trackingVersion = version;
-                AddOrUpdateValue(CURRENT_VERSION, version);
+                AddOrUpdateValue(FIRST_USE_DATE, DateTime.Now.ToString());
             }
+
+            // increment the significant event count
+            var sigEventCount = GetValueOrDefault<int>(SIGNIFICANT_EVENT_COUNT, 0);
+            sigEventCount++;
+            AddOrUpdateValue(SIGNIFICANT_EVENT_COUNT, sigEventCount++);
 
             if (settings.Debug)
-                Debug.WriteLine("APPIRATER Tracking version: {0}", trackingVersion);
-
-            if (trackingVersion == version)
-            {
-                // check if the first use date has been set. if not, set it.
-                if (!userDefaults.Values.ContainsKey(FIRST_USE_DATE))
-                {
-                    AddOrUpdateValue(FIRST_USE_DATE, DateTime.Now.ToString());
-                }
-
-                // increment the significant event count
-                var sigEventCount = GetValueOrDefault<int>(SIGNIFICANT_EVENT_COUNT, 0);
-                sigEventCount++;
-                AddOrUpdateValue(SIGNIFICANT_EVENT_COUNT, sigEventCount++);
-
-                if (settings.Debug)
-                    Debug.WriteLine("APPIRATER Significant event count: {0}", sigEventCount);
-            }
-            else
-                Restart();
+                Debug.WriteLine("APPIRATER Significant event count: {0}", sigEventCount);
         }
 
         /// <summary>
