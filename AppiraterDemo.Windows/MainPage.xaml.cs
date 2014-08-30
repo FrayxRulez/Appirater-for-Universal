@@ -28,7 +28,7 @@ namespace AppiraterDemo
             this.InitializeComponent();
             this.NavigationCacheMode = NavigationCacheMode.Required;
 
-            Loaded += MainPage_Loaded;
+            //Loaded += MainPage_Loaded;
         }
 
         async void MainPage_Loaded(object sender, RoutedEventArgs e)
@@ -37,7 +37,7 @@ namespace AppiraterDemo
             settings.UsesUntilPrompt = 3;
             settings.DaysUntilPrompt = -1;
             var appirater = new Appirater(settings);
-            appirater.AppLaunched();
+            appirater.AppLaunched(true);
         }
     }
 }

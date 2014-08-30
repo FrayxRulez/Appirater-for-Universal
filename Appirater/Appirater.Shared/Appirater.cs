@@ -26,6 +26,14 @@ namespace Windows.UI.Xaml
         readonly AppiraterSettings settings;
         private MessageDialog ratingAlert;
 
+        public AppiraterSettings Settings
+        {
+            get
+            {
+                return settings;
+            }
+        }
+
         //public Appirater(int appId)
         //    : this(new AppiraterSettings(appId))
         //{
