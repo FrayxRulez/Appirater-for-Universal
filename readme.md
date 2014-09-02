@@ -1,6 +1,6 @@
 Introduction
 ============
-Appirater is a class that you can drop into any Windows or Windows Phone (8.1 or later) app that will help remind your users to review your app on the Store.  The code is released under the MIT/X11, so feel free to
+Appirater is a class that you can drop into any Windows or Windows Phone app that will help remind your users to review your app on the Store.  The code is released under the MIT/X11, so feel free to
 modify and share your changes with the world. 
 
 The source is based on [Appirater for Monotouch].
