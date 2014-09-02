@@ -1,6 +1,9 @@
-﻿using System;
+﻿using Microsoft.Phone.Tasks;
+using Microsoft.Xna.Framework.GamerServices;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO.IsolatedStorage;
 using System.Text;
 using Windows.ApplicationModel;
 using Windows.Foundation.Metadata;
@@ -8,7 +11,7 @@ using Windows.Storage;
 using Windows.System;
 using Windows.UI.Popups;
 
-namespace Windows.UI.Xaml
+namespace Microsoft.Phone.Controls
 {
     public class Appirater
     {
@@ -21,10 +24,7 @@ namespace Windows.UI.Xaml
         const string RATED_CURRENT_VERSION = "kAppiraterRatedCurrentVersion";
         const string DECLINED_TO_RATE = "kAppiraterDeclinedToRate";
         const string REMINDER_REQUEST_DATE = "kAppiraterReminderRequestDate";
-        const string TEMPLATE_REVIEW_URL_W81 = "ms-windows-store:REVIEW?PFN={0}";
-        const string TEMPLATE_REVIEW_URL_WP81 = "ms-windows-store:reviewapp?appid={0}";
         readonly AppiraterSettings settings;
-        private MessageDialog ratingAlert;
 
         public AppiraterSettings Settings
         {
@@ -55,12 +55,9 @@ namespace Windows.UI.Xaml
             this.settings = settings;
         }
 
-        public MessageDialog RatingAlert { get { return ratingAlert; } }
-
         /// <summary>
         /// Calls [Appirater appLaunched:YES]. See appLaunched: for details of functionality.
         /// </summary>
-        [Deprecated("While still functional, it's better to use appLaunched:(BOOL)canPromptForRating instead.", DeprecationType.Deprecate, 1)]
         public void AppLaunched()
         {
             AppLaunched(true);
@@ -141,16 +138,9 @@ namespace Windows.UI.Xaml
         /// </summary>
         public void RateApp()
         {
-#if WINDOWS_APP
-            var reviewURL = string.Format(TEMPLATE_REVIEW_URL_W81, settings.AppId);
-#elif WINDOWS_PHONE_APP
-            var reviewURL = string.Format(TEMPLATE_REVIEW_URL_WP81, settings.AppId);
-#endif
-
-
             AddOrUpdateValue(RATED_CURRENT_VERSION, true);
 
-            Launcher.LaunchUriAsync(new Uri(reviewURL));
+            new MarketplaceReviewTask().Show();
         }
 
         /// <summary>
@@ -167,38 +157,30 @@ namespace Windows.UI.Xaml
             AddOrUpdateValue(REMINDER_REQUEST_DATE, DateTime.MinValue);
         }
 
-        private async void ShowRatingAlert()
+        private void ShowRatingAlert()
         {
-#if WINDOWS_APP
-            var alertView = new MessageDialog(settings.Message, settings.MessageTitle);
-            alertView.Commands.Add(new UICommand(settings.RateButton) { Id = 0 });
-            alertView.Commands.Add(new UICommand(settings.RateLaterButton) { Id = 1 });
-            alertView.Commands.Add(new UICommand(settings.CancelButton) { Id = 2 });
-#else
-            var alertView = new MessageDialog(settings.Message, settings.MessageTitle.ToUpper());
-            alertView.Commands.Add(new UICommand(settings.RateButton.ToLower()) { Id = 0 });
-            alertView.Commands.Add(new UICommand(settings.RateLaterButton.ToLower()) { Id = 1 });
-#endif
-
-            ratingAlert = alertView;
-            var result = await alertView.ShowAsync();
-            if (result != null)
+            var buttons = new string[] { settings.RateButton.ToLower(), settings.RateLaterButton.ToLower() };
+            Guide.BeginShowMessageBox(settings.MessageTitle, settings.Message, buttons, 0, MessageBoxIcon.None, (result) =>
             {
-                var buttonId = (int)result.Id;
-                switch (buttonId)
+                var choice = Guide.EndShowMessageBox(result);
+                if (choice.HasValue)
                 {
-                    case 0:
-                        RateApp();
-                        break;
-                    case 1:
-                        AddOrUpdateValue(REMINDER_REQUEST_DATE, DateTime.Now.ToString());
-                        AddOrUpdateValue(USE_COUNT, 0);
-                        break;
-                    case 2:
-                        AddOrUpdateValue(DECLINED_TO_RATE, true);
-                        break;
+                    switch (choice.Value)
+                    {
+                        case 0:
+                            RateApp();
+                            break;
+                        case 1:
+                            AddOrUpdateValue(REMINDER_REQUEST_DATE, DateTime.Now.ToString());
+                            AddOrUpdateValue(USE_COUNT, 0);
+                            break;
+                        case 2:
+                            AddOrUpdateValue(DECLINED_TO_RATE, true);
+                            break;
+                    }
                 }
-            }
+
+            }, null);
         }
 
         private bool RatingConditionsHaveBeenMet()
@@ -242,8 +224,8 @@ namespace Windows.UI.Xaml
 
         private void IncrementUseCount()
         {
-            var userDefaults = ApplicationData.Current.LocalSettings;
-            if (!userDefaults.Values.ContainsKey(FIRST_USE_DATE))
+            var userDefaults = IsolatedStorageSettings.ApplicationSettings;
+            if (!userDefaults.Contains(FIRST_USE_DATE))
             {
                 AddOrUpdateValue(FIRST_USE_DATE, DateTime.Now.ToString());
             }
@@ -259,8 +241,8 @@ namespace Windows.UI.Xaml
 
         private void IncrementSignificantEventCount()
         {
-            var userDefaults = ApplicationData.Current.LocalSettings;
-            if (!userDefaults.Values.ContainsKey(FIRST_USE_DATE))
+            var userDefaults = IsolatedStorageSettings.ApplicationSettings;
+            if (!userDefaults.Contains(FIRST_USE_DATE))
             {
                 AddOrUpdateValue(FIRST_USE_DATE, DateTime.Now.ToString());
             }
@@ -281,25 +263,25 @@ namespace Windows.UI.Xaml
         /// <param name="Key"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-        private bool AddOrUpdateValue(string key, Object value)
+        public bool AddOrUpdateValue(string key, Object value)
         {
             bool valueChanged = false;
 
             // If the key exists
-            if (ApplicationData.Current.LocalSettings.Values.ContainsKey(key))
+            if (IsolatedStorageSettings.ApplicationSettings.Contains(key))
             {
                 // If the value has changed
-                if (ApplicationData.Current.LocalSettings.Values[key] != value)
+                if (IsolatedStorageSettings.ApplicationSettings[key] != value)
                 {
                     // Store the new value
-                    ApplicationData.Current.LocalSettings.Values[key] = value;
+                    IsolatedStorageSettings.ApplicationSettings[key] = value;
                     valueChanged = true;
                 }
             }
             // Otherwise create the key.
             else
             {
-                ApplicationData.Current.LocalSettings.Values.Add(key, value);
+                IsolatedStorageSettings.ApplicationSettings.Add(key, value);
                 valueChanged = true;
             }
 
@@ -315,14 +297,14 @@ namespace Windows.UI.Xaml
         /// <param name="Key"></param>
         /// <param name="defaultValue"></param>
         /// <returns></returns>
-        private valueType GetValueOrDefault<valueType>(string key, valueType defaultValue)
+        public valueType GetValueOrDefault<valueType>(string key, valueType defaultValue)
         {
             valueType value;
 
             // If the key exists, retrieve the value.
-            if (ApplicationData.Current.LocalSettings.Values.ContainsKey(key))
+            if (IsolatedStorageSettings.ApplicationSettings.Contains(key))
             {
-                value = (valueType)ApplicationData.Current.LocalSettings.Values[key];
+                value = (valueType)IsolatedStorageSettings.ApplicationSettings[key];
             }
             // Otherwise, use the default value.
             else

@@ -9,7 +9,7 @@
     <ProjectGuid>{FEE09F91-A092-46FA-B25C-20FE25879F73}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Appirater.WindowsPhone</RootNamespace>
+    <RootNamespace>Appirater</RootNamespace>
     <AssemblyName>Appirater</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformVersion>8.1</TargetPlatformVersion>

@@ -9,7 +9,7 @@
     <ProjectGuid>{6338295F-8EFC-47BF-9FE5-E2BF4DB96166}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Appirater.Windows</RootNamespace>
+    <RootNamespace>Appirater</RootNamespace>
     <AssemblyName>Appirater</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformVersion>8.1</TargetPlatformVersion>

@@ -1,15 +1,14 @@
-﻿using System;
+﻿using AppiraterLibrary.Resources;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
-using Windows.Security.Cryptography;
-using Windows.Security.Cryptography.Core;
 using Windows.Storage;
 
-namespace Windows.UI.Xaml
+namespace Microsoft.Phone.Controls
 {
     public class AppiraterSettings
     {
@@ -102,13 +101,6 @@ namespace Windows.UI.Xaml
         //{
         //}
 
-#if WINDOWS_APP
-        public AppiraterSettings(string appName, bool debug)
-            : this(Windows.ApplicationModel.Package.Current.Id.FamilyName, appName, debug)
-        {
-
-        }
-#elif WINDOWS_PHONE_APP
         public AppiraterSettings(string appName, bool debug)
             : this(GetAppId(), appName, debug)
         {
@@ -117,30 +109,26 @@ namespace Windows.UI.Xaml
 
         private static string GetAppId()
         {
-            var def = XNamespace.Get("http://schemas.microsoft.com/appx/2010/manifest");
-            var mp = XNamespace.Get("http://schemas.microsoft.com/appx/2014/phone/manifest");
-            var appXml = XElement.Load("AppxManifest.xml");
-            var appElement = (from manifestData in appXml.Descendants(mp + "PhoneIdentity") select manifestData).SingleOrDefault();
+            var appXml = XElement.Load("WMAppManifest.xml");
+            var appElement = (from manifestData in appXml.Descendants("App") select manifestData).SingleOrDefault();
 
             if (appElement != null)
             {
-                return appElement.Attribute("PhoneProductId").Value;
+                return appElement.Attribute("ProductID").Value;
             }
 
             throw new ArgumentNullException("You must associate the app with the Store or manually provide the appId");
         }
-#endif
-
 
         public AppiraterSettings(string appId, string appName, bool debug)
         {
             AppId = appId;
             AppName = appName;
-            Message = string.Format(AppResources.rate_message, AppName);
-            MessageTitle = string.Format(AppResources.rate_title, AppName);
-            CancelButton = AppResources.rate_cancel;
-            RateButton = string.Format(AppResources.rate, AppName);
-            RateLaterButton = AppResources.rate_later;
+            Message = string.Format(Resources.rate_message, AppName);
+            MessageTitle = string.Format(Resources.rate_title, AppName);
+            CancelButton = Resources.rate_cancel;
+            RateButton = string.Format(Resources.rate, AppName);
+            RateLaterButton = Resources.rate_later;
             DaysUntilPrompt = 30;
             UsesUntilPrompt = 20;
             SigEventsUntilPrompt = -1;
