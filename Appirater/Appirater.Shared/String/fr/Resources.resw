@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -123,7 +124,7 @@
     <value>Si vous aimez {0}, voulez-vous prendre un moment pour l\'évaluer? Cela ne vous prendra pas plus d\'une minute. Merci de votre soutien!</value>
   </data>
   <data name="rate" xml:space="preserve">
-    <value>Notez {0}</value>
+    <value>Notez</value>
   </data>
   <data name="rate_later" xml:space="preserve">
     <value>Rappelez-moi plus tard</value>

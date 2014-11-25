@@ -39,7 +39,7 @@
         public static ResourceLoader ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    ResourceLoader temp = new ResourceLoader("Appirater/Resources");
+                    ResourceLoader temp = ResourceLoader.GetForCurrentView("Appirater/Resources");
                     resourceMan = temp;
                 }
                 return resourceMan;
