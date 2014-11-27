@@ -159,12 +159,12 @@ namespace Windows.UI.Xaml
         public void Restart()
         {
             AddOrUpdateValue(CURRENT_VERSION, Package.Current.Id.Version.ToString());
-            AddOrUpdateValue(FIRST_USE_DATE, DateTime.Now);
+            AddOrUpdateValue(FIRST_USE_DATE, DateTime.Now.ToBinary());
             AddOrUpdateValue(USE_COUNT, 1);
             AddOrUpdateValue(SIGNIFICANT_EVENT_COUNT, 0);
             AddOrUpdateValue(RATED_CURRENT_VERSION, false);
             AddOrUpdateValue(DECLINED_TO_RATE, false);
-            AddOrUpdateValue(REMINDER_REQUEST_DATE, DateTime.MinValue);
+            AddOrUpdateValue(REMINDER_REQUEST_DATE, DateTime.MinValue.ToBinary());
         }
 
         private async void ShowRatingAlert()
@@ -191,7 +191,7 @@ namespace Windows.UI.Xaml
                         RateApp();
                         break;
                     case 1:
-                        AddOrUpdateValue(REMINDER_REQUEST_DATE, DateTime.Now.ToString());
+                        AddOrUpdateValue(REMINDER_REQUEST_DATE, DateTime.Now.ToBinary());
                         AddOrUpdateValue(USE_COUNT, 0);
                         break;
                     case 2:
@@ -206,7 +206,7 @@ namespace Windows.UI.Xaml
             if (settings.Debug)
                 return true;
 
-            DateTime dateOfFirstLaunch = DateTime.Parse(GetValueOrDefault<string>(FIRST_USE_DATE, DateTime.Now.ToString()));
+            DateTime dateOfFirstLaunch = DateTime.FromBinary(GetValueOrDefault<long>(FIRST_USE_DATE, DateTime.Now.ToBinary()));
             TimeSpan timeSinceFirstLaunch = DateTime.Now.Subtract(dateOfFirstLaunch);
             TimeSpan timeUntilRate = new TimeSpan(settings.DaysUntilPrompt, 0, 0, 0);
             if (timeSinceFirstLaunch < timeUntilRate)
@@ -231,7 +231,7 @@ namespace Windows.UI.Xaml
                 return false;
 
             // if the user wanted to be reminded later, has enough time passed?
-            DateTime reminderRequestDate = DateTime.Parse(GetValueOrDefault<string>(REMINDER_REQUEST_DATE, DateTime.MinValue.ToString()));
+            DateTime reminderRequestDate = DateTime.FromBinary(GetValueOrDefault<long>(REMINDER_REQUEST_DATE, DateTime.MinValue.ToBinary()));
             TimeSpan timeSinceReminderRequest = DateTime.Now.Subtract(reminderRequestDate);
             TimeSpan timeUntilReminder = new TimeSpan(settings.TimeBeforeReminding, 0, 0, 0);
             if (timeSinceReminderRequest < timeUntilReminder)
@@ -245,7 +245,7 @@ namespace Windows.UI.Xaml
             var userDefaults = ApplicationData.Current.LocalSettings;
             if (!userDefaults.Values.ContainsKey(FIRST_USE_DATE))
             {
-                AddOrUpdateValue(FIRST_USE_DATE, DateTime.Now.ToString());
+                AddOrUpdateValue(FIRST_USE_DATE, DateTime.Now.ToBinary());
             }
 
             // increment the use count
@@ -262,7 +262,7 @@ namespace Windows.UI.Xaml
             var userDefaults = ApplicationData.Current.LocalSettings;
             if (!userDefaults.Values.ContainsKey(FIRST_USE_DATE))
             {
-                AddOrUpdateValue(FIRST_USE_DATE, DateTime.Now.ToString());
+                AddOrUpdateValue(FIRST_USE_DATE, DateTime.Now.ToBinary());
             }
 
             // increment the significant event count
