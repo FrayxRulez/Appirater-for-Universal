@@ -8,7 +8,7 @@ The source is based on [Appirater for Monotouch].
 How to
 ======
 
-* Declare ad object of type `Appirater` in your `App.xaml.cs`.
+* Declare an object of type `Appirater` in your `App.xaml.cs`.
 * Initialize it in `App()` constructor after `Window.Current.Activate()` (`new Appirater("<your app name>", bool debug)`).
 * Customize behaviors using `.Settings` property.
 * Call `.AppLaunched(true)` at the next line.
