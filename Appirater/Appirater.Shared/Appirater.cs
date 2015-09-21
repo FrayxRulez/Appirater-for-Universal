@@ -23,6 +23,7 @@ namespace Windows.UI.Xaml
         const string REMINDER_REQUEST_DATE = "kAppiraterReminderRequestDate";
         const string TEMPLATE_REVIEW_URL_W81 = "ms-windows-store:REVIEW?PFN={0}";
         const string TEMPLATE_REVIEW_URL_WP81 = "ms-windows-store:reviewapp?appid={0}";
+        const string TEMPLATE_REVIEW_URL_W10 = "ms-windows-store://review/?ProductId={0}";
         readonly AppiraterSettings settings;
         private MessageDialog ratingAlert;
 
@@ -145,6 +146,8 @@ namespace Windows.UI.Xaml
             var reviewURL = string.Format(TEMPLATE_REVIEW_URL_W81, settings.AppId);
 #elif WINDOWS_PHONE_APP
             var reviewURL = string.Format(TEMPLATE_REVIEW_URL_WP81, settings.AppId);
+#elif WINDOWS_UWP
+            var reviewURL = string.Format(TEMPLATE_REVIEW_URL_W10, settings.AppId);
 #endif
 
 
