@@ -15,6 +15,10 @@ How to
 * Call `.AppEnteredForeground(true)` in your `Window.Current.Activated` event handler.
 * (Optional) Call `.UserDidSignificantEvent(true)` when the user does something 'significant' in the app.
 
+N.B.
+======
+In a Windows 10 app, the AppId property is the alphanumeric sequence at the end of the Store URL.
+
 Install
 =======
 You can install the library via [NuGet]:
