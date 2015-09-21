@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Appirater", "Appirater", "{35429566-B14B-43B2-8B76-8169B6F94EA3}"
 EndProject
@@ -19,8 +19,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Appirater.Silverlight", "Appirater\Appirater.Silverlight\Appirater.Silverlight.csproj", "{1A3D2DF8-3EA8-4CB0-9978-B31EB93F18A1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Appirater.Universal", "Appirater\Appirater.Universal\Appirater.Universal.csproj", "{A52B8B27-DD82-4DC7-BE79-AED22C7BFD82}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		Appirater\Appirater.Shared\Appirater.Shared.projitems*{a52b8b27-dd82-4dc7-be79-aed22c7bfd82}*SharedItemsImports = 4
 		Appirater\Appirater.Shared\Appirater.Shared.projitems*{6338295f-8efc-47bf-9fe5-e2bf4db96166}*SharedItemsImports = 4
 		Appirater\Appirater.Shared\Appirater.Shared.projitems*{af748f5d-14aa-4c21-9b69-c02d7d5e768d}*SharedItemsImports = 13
 		Appirater\Appirater.Shared\Appirater.Shared.projitems*{fee09f91-a092-46fa-b25c-20fe25879f73}*SharedItemsImports = 4
@@ -80,6 +83,22 @@ Global
 		{1A3D2DF8-3EA8-4CB0-9978-B31EB93F18A1}.Release|x64.ActiveCfg = Release|Any CPU
 		{1A3D2DF8-3EA8-4CB0-9978-B31EB93F18A1}.Release|x86.ActiveCfg = Release|x86
 		{1A3D2DF8-3EA8-4CB0-9978-B31EB93F18A1}.Release|x86.Build.0 = Release|x86
+		{A52B8B27-DD82-4DC7-BE79-AED22C7BFD82}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A52B8B27-DD82-4DC7-BE79-AED22C7BFD82}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A52B8B27-DD82-4DC7-BE79-AED22C7BFD82}.Debug|ARM.ActiveCfg = Debug|ARM
+		{A52B8B27-DD82-4DC7-BE79-AED22C7BFD82}.Debug|ARM.Build.0 = Debug|ARM
+		{A52B8B27-DD82-4DC7-BE79-AED22C7BFD82}.Debug|x64.ActiveCfg = Debug|x64
+		{A52B8B27-DD82-4DC7-BE79-AED22C7BFD82}.Debug|x64.Build.0 = Debug|x64
+		{A52B8B27-DD82-4DC7-BE79-AED22C7BFD82}.Debug|x86.ActiveCfg = Debug|x86
+		{A52B8B27-DD82-4DC7-BE79-AED22C7BFD82}.Debug|x86.Build.0 = Debug|x86
+		{A52B8B27-DD82-4DC7-BE79-AED22C7BFD82}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A52B8B27-DD82-4DC7-BE79-AED22C7BFD82}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A52B8B27-DD82-4DC7-BE79-AED22C7BFD82}.Release|ARM.ActiveCfg = Release|ARM
+		{A52B8B27-DD82-4DC7-BE79-AED22C7BFD82}.Release|ARM.Build.0 = Release|ARM
+		{A52B8B27-DD82-4DC7-BE79-AED22C7BFD82}.Release|x64.ActiveCfg = Release|x64
+		{A52B8B27-DD82-4DC7-BE79-AED22C7BFD82}.Release|x64.Build.0 = Release|x64
+		{A52B8B27-DD82-4DC7-BE79-AED22C7BFD82}.Release|x86.ActiveCfg = Release|x86
+		{A52B8B27-DD82-4DC7-BE79-AED22C7BFD82}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -89,5 +108,6 @@ Global
 		{6338295F-8EFC-47BF-9FE5-E2BF4DB96166} = {35429566-B14B-43B2-8B76-8169B6F94EA3}
 		{FEE09F91-A092-46FA-B25C-20FE25879F73} = {35429566-B14B-43B2-8B76-8169B6F94EA3}
 		{1A3D2DF8-3EA8-4CB0-9978-B31EB93F18A1} = {35429566-B14B-43B2-8B76-8169B6F94EA3}
+		{A52B8B27-DD82-4DC7-BE79-AED22C7BFD82} = {35429566-B14B-43B2-8B76-8169B6F94EA3}
 	EndGlobalSection
 EndGlobal

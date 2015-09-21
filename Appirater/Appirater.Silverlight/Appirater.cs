@@ -15,8 +15,6 @@ namespace Microsoft.Phone.Controls
 {
     public class Appirater
     {
-        const string SELECTOR_INCREMENT_AND_RATE = "incrementAndRate:";
-        const string SELECTOR_INCREMENT_EVENT_AND_RATE = "incrementSignificantEventAndRate:";
         const string FIRST_USE_DATE = "kAppiraterFirstUseDate";
         const string USE_COUNT = "kAppiraterUseCount";
         const string SIGNIFICANT_EVENT_COUNT = "kAppiraterSignificantEventCount";

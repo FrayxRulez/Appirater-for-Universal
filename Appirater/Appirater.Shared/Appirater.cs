@@ -12,8 +12,6 @@ namespace Windows.UI.Xaml
 {
     public class Appirater
     {
-        const string SELECTOR_INCREMENT_AND_RATE = "incrementAndRate:";
-        const string SELECTOR_INCREMENT_EVENT_AND_RATE = "incrementSignificantEventAndRate:";
         const string FIRST_USE_DATE = "kAppiraterFirstUseDate";
         const string USE_COUNT = "kAppiraterUseCount";
         const string SIGNIFICANT_EVENT_COUNT = "kAppiraterSignificantEventCount";
@@ -21,6 +19,7 @@ namespace Windows.UI.Xaml
         const string RATED_CURRENT_VERSION = "kAppiraterRatedCurrentVersion";
         const string DECLINED_TO_RATE = "kAppiraterDeclinedToRate";
         const string REMINDER_REQUEST_DATE = "kAppiraterReminderRequestDate";
+
         const string TEMPLATE_REVIEW_URL_W81 = "ms-windows-store:REVIEW?PFN={0}";
         const string TEMPLATE_REVIEW_URL_WP81 = "ms-windows-store:reviewapp?appid={0}";
         const string TEMPLATE_REVIEW_URL_W10 = "ms-windows-store://review/?ProductId={0}";
@@ -35,18 +34,16 @@ namespace Windows.UI.Xaml
             }
         }
 
-        //public Appirater(int appId)
-        //    : this(new AppiraterSettings(appId))
-        //{
-        //}
-
-        //public Appirater(int appId, bool debug)
-        //    : this(new AppiraterSettings(appId, debug))
-        //{
-        //}
-
+#if !WINDOWS_UWP
         public Appirater(string appName, bool debug)
             : this(new AppiraterSettings(appName, debug))
+        {
+
+        }
+#endif
+
+        public Appirater(string appId, string appName, bool debug)
+            : this (new AppiraterSettings(appId, appName, debug))
         {
 
         }
@@ -149,7 +146,6 @@ namespace Windows.UI.Xaml
 #elif WINDOWS_UWP
             var reviewURL = string.Format(TEMPLATE_REVIEW_URL_W10, settings.AppId);
 #endif
-
 
             AddOrUpdateValue(RATED_CURRENT_VERSION, true);
 
@@ -284,7 +280,7 @@ namespace Windows.UI.Xaml
         /// <param name="Key"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-        private bool AddOrUpdateValue(string key, Object value)
+        private bool AddOrUpdateValue(string key, object value)
         {
             bool valueChanged = false;
 
@@ -308,7 +304,6 @@ namespace Windows.UI.Xaml
 
             return valueChanged;
         }
-
 
         /// <summary>
         /// Get the current value of the setting, or if it is not found, set the 

@@ -92,16 +92,6 @@ namespace Windows.UI.Xaml
         /// </summary>
         public bool Debug { get; set; }
 
-        //public AppiraterSettings(int appId)
-        //    : this(appId, (NSString)NSBundle.MainBundle.InfoDictionary.ObjectForKey(new NSString("CFBundleName")), false)
-        //{
-        //}
-
-        //public AppiraterSettings(int appId, bool debug)
-        //    : this(appId, (NSString)NSBundle.MainBundle.InfoDictionary.ObjectForKey(new NSString("CFBundleName")), debug)
-        //{
-        //}
-
 #if WINDOWS_APP
         public AppiraterSettings(string appName, bool debug)
             : this(Windows.ApplicationModel.Package.Current.Id.FamilyName, appName, debug)
@@ -130,7 +120,6 @@ namespace Windows.UI.Xaml
             throw new ArgumentNullException("You must associate the app with the Store or manually provide the appId");
         }
 #endif
-
 
         public AppiraterSettings(string appId, string appName, bool debug)
         {
